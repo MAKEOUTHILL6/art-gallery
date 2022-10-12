@@ -15,14 +15,16 @@ const publicationSchema = new mongoose.Schema({
         required: true,
     },
     certificate: {
-        type: String, enum: ['Yes', 'No']
+        type: String,
+        enum: ['Yes', 'No'],
+        required: true,
     },
     author: {
         type: mongoose.Types.ObjectId,
         ref: 'User',
     },
     userShared: [{
-        type: Object,
+        type: mongoose.Types.ObjectId,
         ref: 'User',
     }],
 

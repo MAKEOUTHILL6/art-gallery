@@ -16,7 +16,7 @@ const userSchema = new mongoose.Schema({
     },
     postCollection: [
         {
-            type: Object,
+            type: mongoose.Types.ObjectId,
             ref: 'Publication',
         }
     ],
@@ -24,6 +24,5 @@ const userSchema = new mongoose.Schema({
 
 
 const User = mongoose.model('User', userSchema);
-
 
 exports.User = User;

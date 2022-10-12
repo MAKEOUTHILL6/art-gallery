@@ -19,7 +19,7 @@ exports.auth = async (req, res, next) => {
 
         } catch (error) {
             console.log(error);
-            res.redirect('/not-found');
+            res.redirect('/auth/login');
         }
     };
 
@@ -29,6 +29,14 @@ exports.auth = async (req, res, next) => {
 
 exports.isAuth = (req, res, next) => {
     if(!req.user){
+        return res.redirect('/not-found');
+    }
+
+    next();
+};
+
+exports.isGuest = (req, res, next) => {
+    if(req.user){
         return res.redirect('/not-found');
     }
 

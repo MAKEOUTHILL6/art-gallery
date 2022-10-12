@@ -4,6 +4,8 @@ const { InitializeDatabase } = require('./config/database');
 const routes = require('./routes');
 const cookieParser = require('cookie-parser');
 const { auth } = require('./middlewares/authMiddlewares');
+const { errorHandler } = require('./middlewares/errorHandlerMiddleware');
+
 
 const app = express();
 const port = 5000;
@@ -21,6 +23,7 @@ app.use(express.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(auth) 
 app.use(routes);
+app.use(errorHandler);
 
 
 

@@ -33,6 +33,12 @@
         </nav>
 
         <main>
+            {{#if error}}
+            <div class="error-box">
+                <p>{{error}}</p>
+            </div>
+            {{/if}}
+
             {{{body}}}
         </main>
 

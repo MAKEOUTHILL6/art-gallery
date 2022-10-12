@@ -6,7 +6,9 @@ const {saltRounds, secret} = require('../config/appConfig');
 
 exports.register = async ({username, password, rePassword, streetAddress}) => {
     if(password !== rePassword){
-        return false;
+        throw {
+            message: 'Password mismatch!',
+        };
     };
 
     let isRegistered = await User.findOne({username}) || false;
@@ -15,7 +17,7 @@ exports.register = async ({username, password, rePassword, streetAddress}) => {
             message: 'Username already registered',
         };
     };
-
+ 
 
     let hashedPassword = await bcrypt.hash(password, saltRounds);
 
@@ -33,7 +35,9 @@ exports.login = async ({username, password}) => {
     let user = await User.findOne({username});
 
     if(!user){
-        return false;
+        throw {
+            message: 'No such username',
+        };
     };
 
     let isValid = await bcrypt.compare(password, user.password);

@@ -1,21 +1,22 @@
 const router = require('express').Router();
 const { sessionName } = require('../config/appConfig');
+const { isAuth, isGuest } = require('../middlewares/authMiddlewares');
 const authServices = require('../services/authServices');
 
-router.get('/register', (req, res) => {
+router.get('/register', isGuest, (req, res) => {
 
     res.render('register');
 });
 
-router.post('/register', async (req, res) => {
+router.post('/register', isGuest, async (req, res) => {
 
     try {
 
         let createdUser = await authServices.register(req.body);
 
-        if (!createdUser) {
-            return res.redirect('/not-found');
-        };
+        // if (!createdUser) {
+        //     return res.render('register', {error: error.message});
+        // };
 
         res.redirect('/auth/login');
 
@@ -27,13 +28,13 @@ router.post('/register', async (req, res) => {
 
 });
 
-router.get('/login', (req, res) => {
+router.get('/login', isGuest, (req, res) => {
 
     res.render('login');
 });
 
 
-router.post('/login', async (req, res) => {
+router.post('/login', isGuest, async (req, res) => {
 
     try {
         let result = await authServices.login(req.body);
@@ -42,9 +43,9 @@ router.post('/login', async (req, res) => {
             res.cookie(sessionName, result, { httpOnly: true });
             res.redirect('/');
         }
-        else {
-            res.redirect('/not-found');
-        }
+        // else {
+        //     res.redirect('/not-found');
+        // }
 
     } catch (error) {
         res.render('login', {
@@ -54,7 +55,7 @@ router.post('/login', async (req, res) => {
 });
 
 
-router.get('/logout', (req, res) => {
+router.get('/logout', isAuth, (req, res) => {
     res.clearCookie(sessionName);
     res.redirect('/');
 });

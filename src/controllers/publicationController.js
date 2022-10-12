@@ -26,9 +26,11 @@ router.post('/create', isAuth, async (req, res) => {
 });
 
 
-router.get('/gallery', (req, res) => {
+router.get('/gallery', async (req, res) => {
 
-    res.render('gallery');
-})
+    const publications = await Publication.find().lean();
+
+    res.render('gallery', {publications});
+});
 
 module.exports = router;

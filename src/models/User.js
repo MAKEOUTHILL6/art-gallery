@@ -9,6 +9,10 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    streetAddress: {
+        type: String,
+        required: true,
+    },
     postCollection: [
         {
             type: Object,

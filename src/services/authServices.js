@@ -4,12 +4,12 @@ const bcrypt = require('bcrypt');
 const {saltRounds, secret} = require('../config/appConfig');
 
 
-exports.register = async ({username, password, rePassword}) => {
+exports.register = async ({username, password, rePassword, streetAddress}) => {
     if(password !== rePassword){
         return false;
     };
 
-    let isRegistered = await User.findOne({username});
+    let isRegistered = await User.findOne({username}) || false;
     if(isRegistered.username){
         throw {
             message: 'Username already registered',
@@ -22,6 +22,7 @@ exports.register = async ({username, password, rePassword}) => {
     let createdUser = User.create({
         username,
         password: hashedPassword,
+        streetAddress,
     });
 
     return createdUser;
@@ -30,8 +31,6 @@ exports.register = async ({username, password, rePassword}) => {
 
 exports.login = async ({username, password}) => {
     let user = await User.findOne({username});
-
-    console.log(user);
 
     if(!user){
         return false;
@@ -47,7 +46,7 @@ exports.login = async ({username, password}) => {
 
 
     let result = new Promise((resolve, reject) => {
-        jwt.sign({ _id: user._id, username: user.username }, secret, {expiresIn: '2d'}, (err, token) => {
+        jwt.sign({ _id: user._id, username: user.username, streetAddress: user.streetAddress }, secret, {expiresIn: '2d'}, (err, token) => {
             if(err){
                 return reject(err);
             };

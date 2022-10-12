@@ -29,7 +29,7 @@ const publicationSchema = new mongoose.Schema({
 });
 
 publicationSchema.path('artPicture').validate(function(){
-    return this.artPicture.startsWith('http' || 'https');
+    return this.artPicture?.startsWith('http' || 'https');
 }, 'Image url should start with either https or http');
 
 const Publication = mongoose.model('Publication', publicationSchema);

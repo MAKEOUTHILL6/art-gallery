@@ -11,7 +11,7 @@ const userSchema = new mongoose.Schema({
     },
     postCollection: [
         {
-            type: mongoose.Types.ObjectId,
+            type: Object,
             ref: 'Publication',
         }
     ],

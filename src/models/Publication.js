@@ -14,13 +14,9 @@ const publicationSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    certificate: [{
-        key: yes,
-        value: yes
-    }, {
-        key: no,
-        value: no
-    }],
+    certificate: {
+        type: String, enum: ['Yes', 'No']
+    },
     author: {
         type: mongoose.Types.ObjectId,
         ref: 'User',
@@ -31,6 +27,10 @@ const publicationSchema = new mongoose.Schema({
     }],
 
 });
+
+publicationSchema.path('artPicture').validate(function(){
+    return this.artPicture.startsWith('http' || 'https');
+}, 'Image url should start with either https or http');
 
 const Publication = mongoose.model('Publication', publicationSchema);
 

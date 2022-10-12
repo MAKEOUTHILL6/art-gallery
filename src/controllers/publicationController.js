@@ -1,5 +1,5 @@
 const router = require('express').Router();
-
+const {Publication} = require('../models/Publication');
 
 router.get('/create', (req, res) => {
 
@@ -9,7 +9,12 @@ router.get('/create', (req, res) => {
 
 router.post('/create', (req, res) => {
 
+    const publication = req.body;
+
     
+
+    res.redirect('/');
+
 });
 
 

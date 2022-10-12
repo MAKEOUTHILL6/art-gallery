@@ -2,6 +2,7 @@ const express = require('express');
 const { handlebars } = require('./config/handlebars');
 const { InitializeDatabase } = require('./config/database');
 const routes = require('./routes');
+const cookieParser = require('cookie-parser');
 
 const app = express();
 const port = 5000;
@@ -14,8 +15,11 @@ handlebars(app);
 app.use('/static', express.static('public'));
 
 
-// MIDDLEWARES 
+// MIDDLEWARES
+app.use(express.urlencoded({extended: false}));
+app.use(cookieParser()); 
 app.use(routes);
+
 
 
 InitializeDatabase()

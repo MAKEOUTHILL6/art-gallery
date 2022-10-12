@@ -9,7 +9,7 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    collection: [
+    postCollection: [
         {
             type: mongoose.Types.ObjectId,
             ref: 'Publication',

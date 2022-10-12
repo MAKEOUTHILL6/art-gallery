@@ -12,6 +12,7 @@ router.post('/create', (req, res) => {
     const publication = req.body;
 
     
+    
 
     res.redirect('/');
 

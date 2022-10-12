@@ -13,7 +13,7 @@ router.get('/not-found', (req, res) => {
 
 router.get('/profile/:id', async (req, res) => {
     
-    let profile = await profileServices.getProfile(req.params.id);
+    let profile = await profileServices.getProfile(req.params.id).lean();
 
     res.render('profile', {profile});
 });

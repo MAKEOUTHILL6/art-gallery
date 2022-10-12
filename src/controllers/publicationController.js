@@ -13,7 +13,12 @@ router.get('/create', (req, res) => {
 
 router.post('/create', isAuth, async (req, res) => {
 
+    const user = await profileServices.getProfile(req.user._id);
     const publication = req.body;
+
+    user.postCollection.push(publication.title);
+
+    user.save();
 
     publication.author = req.user._id;
 
@@ -71,13 +76,10 @@ router.get('/gallery', async (req, res) => {
 
 router.get('/share/:id', async (req, res) => {
     const publication = await publicationServices.getPublication(req.params.id);
-    const user = await profileServices.getProfile(req.user._id);
 
-    publication.userShared.push(user._id);
-    user.postCollection.push(req.params.id);
+    publication.userShared.push(req.user._id);
 
     publication.save();
-    user.save();
 
     res.redirect('/publication/gallery');
 });

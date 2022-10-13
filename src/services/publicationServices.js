@@ -1,4 +1,5 @@
 const {Publication} = require('../models/Publication');
+const { User } = require('../models/User');
 
 
 exports.getPublication = (id) => Publication.findById(id);

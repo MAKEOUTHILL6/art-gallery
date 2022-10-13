@@ -16,10 +16,16 @@ router.get('/not-found', (req, res) => {
 
 
 router.get('/profile/:id', async (req, res) => {
-    
-    let profile = await profileServices.getProfile(req.params.id).lean();
 
-    res.render('profile', {profile});
+    const profile = await profileServices.getProfile(req.params.id).populate('postCollection').populate('shares').lean();
+
+    const publicationTitles = profile.postCollection.map(x => x.title).join(', ');
+    const sharedTitles = profile.shares.map(x => x.title).join(', ');
+
+    // ONE WAY TO GET THE PUBLICATIONS WHICH BELONG TO THE USER BUT ITS VERY SLOW () INSTEAD WE DO IT IN THE PUBLICATION CREATE
+    // const userPublications = Publication.find({author: profile._id});
+
+    res.render('profile', {profile, publicationTitles, sharedTitles});
 });
 
 

@@ -14,12 +14,18 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    // postCollection: [
-    //     {
-    //         type: String,
-    //         ref: 'Publication',
-    //     }
-    // ],
+    postCollection: [
+        {
+            type: mongoose.Types.ObjectId,
+            ref: 'Publication',
+        }
+    ],
+    shares: [
+        {
+            type: mongoose.Types.ObjectId,
+            ref: 'Publication',
+        }
+    ]
 });
 
 

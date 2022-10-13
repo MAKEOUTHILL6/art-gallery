@@ -5,11 +5,18 @@
         <article class="profile-card-info">
             <h2>Username: {{profile.username}}</h2>
             <h3>Address: {{profile.streetAddress}}</h3>
-            {{#each profile.postCollection}}
-                <h4>Titles of which the user is the author: {{title}}</h4>
+
+            {{#if publicationTitles}}
+                <h4>Titles of which the user is the author: {{publicationTitles}}</h4>
             {{else}}
                 <h4>Titles of which the user is the author: Not yet.</h4>
-            {{/each}}
+            {{/if}}
+
+            {{#if sharedTitles}}
+                <h4>Titles of shared posts by the user: {{sharedTitles}}</h4>
+            {{else}}
+                <h4>Titles of shared posts by the user: Not yet.</h4>
+            {{/if}}
 
         </article>
 

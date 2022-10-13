@@ -1,7 +1,6 @@
 const router = require('express').Router();
 const { isAuth } = require('../middlewares/authMiddlewares');
 const { Publication } = require('../models/Publication');
-const { User } = require('../models/User');
 const publicationServices = require('../services/publicationServices');
 const profileServices = require('../services/profileServices');
 const { getErrorMessage } = require('../middlewares/errorHandlerMiddleware');
@@ -20,19 +19,16 @@ router.post('/create', isAuth, async (req, res) => {
 
     try {
        
-        await publicationServices.createPublication(publication);
+        const createdPublication = await publicationServices.createPublication(publication);
+
+        // ADD PUBLICATION TO THE POSTCOLLECTION OF THE USER 
+        await profileServices.addPublication(req.user._id, createdPublication._id);
 
         res.redirect('/publication/gallery');
         
     } catch (error) {
         res.render('create', { ...req.body, error: getErrorMessage(error) });
     }
-
-    // const user = await profileServices.getProfile(req.user._id);
-    
-    // user.postCollection.push(publication._id);
-
-    // user.save();
 
 });
 
@@ -95,9 +91,12 @@ router.get('/gallery', async (req, res) => {
 
 router.get('/share/:id', isAuth, async (req, res) => {
     const publication = await publicationServices.getPublication(req.params.id);
+    const user = await profileServices.getProfile(req.user._id);
 
+    user.shares.push(publication._id);
     publication.userShared.push(req.user._id);
 
+    await user.save();
     await publication.save();
 
     res.redirect(`/publication/details/${req.params.id}`);

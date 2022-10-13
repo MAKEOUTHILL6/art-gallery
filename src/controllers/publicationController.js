@@ -4,6 +4,7 @@ const { Publication } = require('../models/Publication');
 const { User } = require('../models/User');
 const publicationServices = require('../services/publicationServices');
 const profileServices = require('../services/profileServices');
+const { getErrorMessage } = require('../middlewares/errorHandlerMiddleware');
 
 router.get('/create', (req, res) => {
 
@@ -13,27 +14,32 @@ router.get('/create', (req, res) => {
 
 router.post('/create', isAuth, async (req, res) => {
 
-    const user = await profileServices.getProfile(req.user._id);
+    // const publication = {...req.body, auhtor: req.user._id}
     const publication = req.body;
-
-    user.postCollection.push(publication.title);
-
-    user.save();
-
     publication.author = req.user._id;
 
-    await Publication.create(publication)
+    try {
+       
+        await publicationServices.createPublication(publication);
 
-    res.redirect('/publication/gallery');
+        res.redirect('/publication/gallery');
+        
+    } catch (error) {
+        res.render('create', { ...req.body, error: getErrorMessage(error) });
+    }
+
+    // const user = await profileServices.getProfile(req.user._id);
+    
+    // user.postCollection.push(publication._id);
+
+    // user.save();
 
 });
 
 
 router.get('/details/:id', async (req, res) => {
 
-    let publication = await publicationServices.getPublication(req.params.id).lean();
-
-    let user = await profileServices.getProfile(publication.author).lean();
+    let publication = await publicationServices.getPublicationDetailed(req.params.id).lean();
 
     let isShared = false;
 
@@ -43,9 +49,9 @@ router.get('/details/:id', async (req, res) => {
         isShared = true;
     }
 
-    const isOwner = publication.author == req.user?._id;
+    const isOwner = publication.author._id == req.user?._id;
 
-    res.render('details', { publication, username: user.username, isOwner, isShared });
+    res.render('details', { publication, username: publication.author.username, isOwner, isShared });
 });
 
 
@@ -53,16 +59,27 @@ router.get('/edit/:id', isAuth, async (req, res) => {
 
     let publication = await publicationServices.getPublication(req.params.id).lean();
 
-    res.render('edit', { publication });
+    // SPRED DATA TO USE IN THE POST WHEN GETTING AN ERROR SO THE VALUE OF THE HTML CAN BE THE SAME AS REQ.BODY
+
+    res.render('edit', { ...publication });
 });
 
 
 router.post('/edit/:id', isAuth, async (req, res) => {
-    let data = req.body;
 
-    await Publication.findByIdAndUpdate(req.params.id, data, { runValidators: true });
+    try {
 
-    res.redirect(`/publication/details/${req.params.id}`);
+        await publicationServices.updatePublication(req.params.id, req.body, { runValidators: true });
+
+        res.redirect(`/publication/details/${req.params.id}`);
+
+    } catch (error) {
+
+        // SPRED DATA TO USE IN THE POST WHEN GETTING AN ERROR 
+
+        res.render(`edit`, { ...req.body, error: getErrorMessage(error) })
+    }
+
 });
 
 
@@ -80,6 +97,13 @@ router.get('/share/:id', async (req, res) => {
     publication.userShared.push(req.user._id);
 
     publication.save();
+
+    res.redirect('/publication/gallery');
+});
+
+
+router.get('/delete/:id', isAuth, async (req, res) => {
+    await publicationServices.deletePublication(req.params.id);
 
     res.redirect('/publication/gallery');
 });

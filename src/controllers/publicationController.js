@@ -49,6 +49,8 @@ router.get('/details/:id', async (req, res) => {
         isShared = true;
     }
 
+    // const isShared = publication.userShared.includes(req.user._id)
+
     const isOwner = publication.author._id == req.user?._id;
 
     res.render('details', { publication, username: publication.author.username, isOwner, isShared });
@@ -96,9 +98,9 @@ router.get('/share/:id', async (req, res) => {
 
     publication.userShared.push(req.user._id);
 
-    publication.save();
+    await publication.save();
 
-    res.redirect('/publication/gallery');
+    res.redirect(`/publication/details/${req.params._id}`);
 });
 
 

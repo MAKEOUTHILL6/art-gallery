@@ -93,14 +93,14 @@ router.get('/gallery', async (req, res) => {
 });
 
 
-router.get('/share/:id', async (req, res) => {
+router.get('/share/:id', isAuth, async (req, res) => {
     const publication = await publicationServices.getPublication(req.params.id);
 
     publication.userShared.push(req.user._id);
 
     await publication.save();
 
-    res.redirect(`/publication/details/${req.params._id}`);
+    res.redirect(`/publication/details/${req.params.id}`);
 });
 
 

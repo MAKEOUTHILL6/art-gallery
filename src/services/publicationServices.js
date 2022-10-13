@@ -7,3 +7,4 @@ exports.updatePublication = (id, data, options) => Publication.findByIdAndUpdate
 exports.createPublication = (data) => Publication.create(data);
 exports.deletePublication = (id) => Publication.findByIdAndDelete(id);
                                     // Publication.findOne({_id: id})
+exports.getAllPublications = () => Publication.find();

@@ -14,12 +14,12 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    postCollection: [
-        {
-            type: String,
-            ref: 'Publication',
-        }
-    ],
+    // postCollection: [
+    //     {
+    //         type: String,
+    //         ref: 'Publication',
+    //     }
+    // ],
 });
 
 

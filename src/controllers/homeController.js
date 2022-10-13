@@ -1,8 +1,12 @@
 const router = require('express').Router();
 const profileServices = require('../services/profileServices');
+const publicationServices = require('../services/publicationServices');
 
-router.get('/', (req, res) => {
-    res.render('home');
+router.get('/', async (req, res) => {
+
+    let publications = await publicationServices.getAllPublications().lean();
+
+    res.render('home', {publications});
 });
 
 

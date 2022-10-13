@@ -104,7 +104,10 @@ router.get('/share/:id', isAuth, async (req, res) => {
 
 
 router.get('/delete/:id', isAuth, async (req, res) => {
+
     await publicationServices.deletePublication(req.params.id);
+
+    await profileServices.deletePublication(req.user._id, req.params.id);
 
     res.redirect('/publication/gallery');
 });
